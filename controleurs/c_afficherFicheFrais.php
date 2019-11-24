@@ -41,7 +41,7 @@ switch($action){
 		    $montantValide = $lesInfosFicheFrais['montantValide'];
 		    $nbJustificatifs = $lesInfosFicheFrais['nbJustificatifs'];
 		    $dateModif =  $lesInfosFicheFrais['dateModif'];
-		    $dateModif =  dateAnglaisVersFrancais($dateModif);
+            $dateModif =  dateAnglaisVersFrancais($dateModif);
             include('vues/v_afficherFicheFrais.php');
         
         }
@@ -54,7 +54,7 @@ switch($action){
             
             $idFrais = $_REQUEST['idFrais'];
            
-            // $pdo->supprimerFraisHorsForfait($idFrais);
+            //$pdo->supprimerFraisHorsForfait($idFrais);
             $visiteur = $_SESSION['lstVisiteur'];
             $mois = $_SESSION['lstMois'];
             $numAnnee = substr($visiteur,0,4);
@@ -73,16 +73,20 @@ switch($action){
     }
     //pour reporter un frais on regarde avant si le visiteur possede deja une fiche de frais si ce n'est pas le cas on en creer une
     case"reporterFrais":{
+
+        $dateFrais =$_REQUEST['dateFrais'];
+   
             $visiteur = $_SESSION['lstVisiteur'];
             $mois = $_SESSION['lstMois'];
             $numAnnee = substr($visiteur,0,4);
             $numMois = substr($mois, 4,2);
-            $dateFrais =$_REQUEST['dateFrais'];
-            if($pdo->estPremierFraisMois($visiteur,$mois)){
-                $pdo->creeNouvellesLignesFrais($visiteur,$mois);
+          
+
+            if($pdo->dernierMoisSaisi($visiteur)== $mois){
+
             }
             else{
-                $pdo->creeNouveauFraisHorsForfait($idVisiteur,$mois,$libelle,$dateFrais,$montant);
+                $pdo->creeNouveauFraisHorsForfait($visiteur,$mois,$libelle,$dateFrais,$montant);
             }
             $lesFraisForfait = $pdo->getLesFraisForfait($visiteur, $mois);
             $lesFraisHorsForfait= $pdo->getLesFraisHorsForfait($visiteur, $mois);
@@ -91,10 +95,35 @@ switch($action){
 		    $montantValide = $lesInfosFicheFrais['montantValide'];
 		    $nbJustificatifs = $lesInfosFicheFrais['nbJustificatifs'];
 		    $dateModif =  $lesInfosFicheFrais['dateModif'];
-		    $dateModif =  dateAnglaisVersFrancais($dateModif);
+            $dateModif =  dateAnglaisVersFrancais($dateModif);
             include('vues/v_afficherFicheFrais.php');
         
         break;
+
+    }
+    case'validerFrais':{
+        
+           
+        $visiteur = $_SESSION['lstVisiteur'];
+        $mois = $_SESSION['lstMois'];
+        $numAnnee = substr($visiteur,0,4);
+        $numMois = substr($mois, 4,2);
+        $lesFraisForfait = $pdo->getLesFraisForfait($visiteur, $mois);
+        $lesFraisHorsForfait= $pdo->getLesFraisHorsForfait($visiteur, $mois);
+        $lesInfosFicheFrais= $pdo->getLesInfosFicheFrais($visiteur,$mois);
+        $libEtat = $lesInfosFicheFrais['libEtat'];
+        $montantValide = $lesInfosFicheFrais['montantValide'];
+        $nbJustificatifs = $lesInfosFicheFrais['nbJustificatifs'];
+        $dateModif =  $lesInfosFicheFrais['dateModif'];
+        $dateModif =  dateAnglaisVersFrancais($dateModif);
+        $pdo->majFicheFrais($visiteur, $mois, "VA");
+        
+        $valider = TRUE;
+        
+        include('vues/v_afficherFicheFrais.php');
+        
+ }
+case'reporterFrais':{
 
     }
 }

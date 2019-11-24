@@ -1,0 +1,44 @@
+
+.nav-pills{
+
+    color : orange;
+
+}
+
+
+
+.nav-pills > li.active > a,
+
+.nav-pills > li.active > a:hover,
+
+.nav-pills > li.active > a:focus {
+
+  color: #fff;
+
+  background-color: #FF9C00;
+
+}
+
+
+
+li a {
+
+   color : #FF9C00; 
+
+}
+
+
+
+h1, h2 {
+
+    color : #FF9C00;
+
+}
+
+
+
+panel-heading-primary panel-title{
+
+    background-color: #FF9C00;
+
+}*/
