@@ -55,21 +55,21 @@ switch($action){
         ob_end_clean();
         $visiteur = $_REQUEST["visiteur"];
         $mois = $_REQUEST["mois"];
-        $lesVisiteurs =$pdo->getLesVisiteursDuComptable($idComptable);
+        
         $fraisforfait = $pdo->getLesFraisForfait($visiteur, $mois);
-        $fraishorsforfait = $pdo->getLesFraisHorsForfait($visiteur, $mois); 
+        $fraishorsforfait = $pdo->getLesFraisHorsForfait($visiteur, $mois);
+        $lstVisiteur=$pdo->getLesVisiteursBy($visiteur); 
         $lesInfosFicheFrais= $pdo->getLesInfosFicheFrais($visiteur,$mois);
-            $libEtat = $lesInfosFicheFrais['libEtat'];
-		    $montantValide = $lesInfosFicheFrais['montantValide'];
-		    $nbJustificatifs = $lesInfosFicheFrais['nbJustificatifs'];
-		    $dateModif =  $lesInfosFicheFrais['dateModif'];
+        //$libEtat = $lesInfosFicheFrais['libEtat'];
+
+
+        
           include("vues/v_detailFiche.php");
             
     }
     
 }
 ?>
-
 
 
                

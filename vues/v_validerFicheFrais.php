@@ -1,6 +1,7 @@
 
 <?php #$lesVisiteurs=$pdo->getLesVisiteursDuComptable($idComptable);?>
 <?php #$lesMois=$pdo->getLesMoisDisponibles(); ?>
+
 <div id="contenu">
       <h2>Mes fiches de frais</h2>
       <h3> Visiteur et mois  à sélectionner : </h3>
@@ -15,6 +16,7 @@
 			
 			foreach($lesVisiteurs as $unVisiteur){
 				?>
+      
 				<option value="<?php echo $unVisiteur['id']; ?>"><?php echo $unVisiteur['nom']. $unVisiteur['prenom'];?></option>
 				<?php
 			}

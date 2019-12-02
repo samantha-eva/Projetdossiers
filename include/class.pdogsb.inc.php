@@ -135,15 +135,15 @@ class PdoGsb{
 			$req = "update lignefraisforfait set lignefraisforfait.quantite = $qte
 			where lignefraisforfait.idvisiteur = '$idVisiteur' and lignefraisforfait.mois = '$mois'
 			and lignefraisforfait.idfraisforfait = '$unIdFrais'";
-                        echo $req ;
 			PdoGsb::$monPdo->exec($req);
+			
 		}
 		
 	}
 	public function majFicheFrais($idVisiteur, $mois , $idEtat){
-		$req="UPDATE fichefrais SET idEtat = '$idEtat', dateModif = now() WHERE idVisiteur = '$idVisiteur' AND mois = '$mois'";
+		$req="UPDATE fichefrais SET idEtat = '$idEtat', dateModif = now() 
+		WHERE idVisiteur = '$idVisiteur' AND mois = '$mois'";
 		PdoGsb::$monPdo->exec($req);
-
 	}
 /**
  * met à jour le nombre de justificatifs de la table ficheFrais
@@ -201,7 +201,15 @@ class PdoGsb{
 		$res->closeCursor();
 		return $lesLignes;
 	}
-
+//afficher le nom et prenom du visiteur  sur le pdf
+	public function getLesVisiteursBy($idVisiteur) {
+		$req = "SELECT visiteur.nom AS nom, visiteur.prenom AS prenom  FROM visiteur where visiteur.id= '$idVisiteur'";
+		$res = PdoGsb::$monPdo->query($req);
+		$lesLignes = array();
+		$lesLignes = $res->fetch();
+		$res->closeCursor();
+		return $lesLignes;
+	}
 	
 /**
  * Crée une nouvelle fiche de frais et les lignes de frais au forfait pour un visiteur et un mois donnés
@@ -251,19 +259,23 @@ class PdoGsb{
  * @param $idFrais 
 */
 	public function supprimerFraisHorsForfait($idFrais){
-		$req = "update lignefraishorsforfait set libelle = CONCAT('libelle','[REFUSE]') where lignefraishorsforfait.id =$idFrais ";
+		$req = "update lignefraishorsforfait set libelle = CONCAT(libelle,'[REFUSE]') where lignefraishorsforfait.id =$idFrais ";
 		PdoGsb::$monPdo->exec($req);
 	}
 
 /**
  *reporte le frais hors forfait
 */
-public function reporterFraisHorsForfait($idFrais,$date){
-	$req="update ligneFraisHorsForfait set ligneFraisHorsForfait=$mois where ligneFraisHorsForfait.id=$idFrais";
- 	PdoGSB::$monPdo->exec($req);
+public function repoterLeMois($idFrais,$date){
+	$date = dateFrancaisVersAnglais($date);
+	$dateReporter = date('Y-m-d', strtotime('+1 month', strtotime($date)));
+	$mois = getMois(dateAnglaisVersFrancais($dateReporter));
 
+	$req = "update lignefraishorsforfait set date  = '$dateReporter', mois = '$mois' where lignefraishorsforfait.id = $idFrais";
+   PdoGsb::$monPdo->exec($req);
+
+   
 }
-
 /**
  * Retourne les mois pour lesquel un visiteur a une fiche de frais
  
@@ -271,8 +283,10 @@ public function reporterFraisHorsForfait($idFrais,$date){
  * @return un tableau associatif de clé un mois -aaaamm- et de valeurs l'année et le mois correspondant 
 */
 	public function getLesMoisDisponibles(){
-		$req = "select fichefrais.mois as mois from  fichefrais 
+		
+		$req = "select fichefrais.mois as mois from  fichefrais where  idEtat = 'CL'
 		order by fichefrais.mois desc ";
+		
 		$res = PdoGsb::$monPdo->query($req);
 		$lesMois =array();
 		$laLigne = $res->fetch();
@@ -327,12 +341,13 @@ public function reporterFraisHorsForfait($idFrais,$date){
 		PdoGsb::$monPdo->exec($req);
 	}
 	public function getLesVisiteursDuComptableVa($idComptable) {
-		$req = "SELECT visiteur.nom AS nom, visiteur.prenom AS prenom, visiteur.id AS id, ficheFrais.dateModif AS dateModif, ficheFrais.idEtat AS etat, ficheFrais.montantValide AS montantValide, ficheFrais.mois AS mois FROM visiteur INNER JOIN comptable on visiteur.idcomptable = comptable.id INNER JOIN fichefrais on visiteur.id = fichefrais.idVisiteur WHERE idComptable ='$idComptable' AND (ficheFrais.idEtat='VA' OR ficheFrais.idEtat='RB' OR ficheFrais.idEtat='MP') ORDER BY visiteur.nom";
+		$req = "SELECT visiteur.nom AS nom, visiteur.prenom AS prenom, visiteur.id AS id, ficheFrais.dateModif AS dateModif, ficheFrais.idEtat AS etat, ficheFrais.montantValide AS montantValide, ficheFrais.mois AS mois FROM visiteur INNER JOIN comptable on visiteur.idcomptable = comptable.id INNER JOIN fichefrais on visiteur.id = fichefrais.idVisiteur WHERE idComptable ='$idComptable' AND (ficheFrais.idEtat='VA' OR ficheFrais.idEtat='RB' OR ficheFrais.idEtat='MP') ORDER BY visiteur.nom DESC";
 		$res = PdoGsb::$monPdo->query($req);
 		$lesLignes = array();
 		$lesLignes = $res->fetchAll();
 		$res->closeCursor();
 		return $lesLignes;
+		
 	}
 }
 ?>

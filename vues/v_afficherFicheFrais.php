@@ -6,7 +6,6 @@
       <input type='hidden' value="<?php echo $mois?>"name="lstMois">
      
 
-    
  
       <div class="corpsForm">
       <p>
@@ -25,6 +24,7 @@
 					$libelle = $unFrais['libelle'];
 					$quantite = $unFrais['quantite'];
 			?>
+    
 					<p>
 						<label for="idFrais"><?php echo $libelle ?></label>
 						<input type="text" id="idFrais" name="lesFrais[<?php echo $idFrais?>]" size="10" maxlength="5" value="<?php echo $quantite?>" >
@@ -38,8 +38,14 @@
       </div>
       <div class="piedForm">
       <p>
-        <input id="ok" type="submit" value="valider" name="valider" size="20" />
-        <input id="annuler" type="reset" value="Effacer" size="20" />
+        <input  type="submit" name="valider" size="20"  onclick="return confirm('Les frais Forfaitisés sont actualisés!\n cliquez sur ok pour continuer.*');"  value="Actualiser"/>
+        <?php 
+       
+       ?>
+      
+          
+         
+  
       </p> 
       </div>
         
@@ -53,7 +59,10 @@
              <tr>
                 <th class="date">Date</th>
 				        <th class="libelle">Libellé</th>  
-                <th class="montant">Montant</th>  
+                <th class="montant">Montant</th> 
+                <th class="montant">Supprimer</th>  
+                <th class="montant">Reporter</th>  
+ 
                 <th class="action">&nbsp;</th>              
              </tr>
 
@@ -69,12 +78,12 @@
   <tr>
                 <td> <?php echo $date ?></td>
                 <td><?php echo $libelle ?></td>
-                <td><?php echo $montant ?></td>
+                <td><?php echo $montant ?></td>                
+
                 <td><a href="index.php?uc=afficherFicheFrais&action=supprimerFrais&idFrais=<?php echo $idFraisHorsForfait ?>" 
 				onclick="return confirm('Voulez-vous vraiment supprimer ce frais?');">Supprimer ce frais</a></td>
 
-        <td><a href="">Reporter ce frais</a></td>
-            
+        <td><a href="index.php?uc=afficherFicheFrais&action=validerReporter&idFrais=<?php echo $idFraisHorsForfait; ?>&date=<?php echo $date; ?>">Reporter </a></td>
             
              </tr>
              <?php		 
@@ -86,18 +95,9 @@
    </table>    
    <form action="index.php?uc=afficherFicheFrais&action=validerFrais" method="post">
    
-    <button <?php if($libEtat == "Validée et mise en paiement" OR $libEtat == "Remboursée"){echo "disabled=disabled";}?> type="submit"
-        onclick="return confirm('Voulez-vous vraiment valider ce frais?');" name="validerFiche" value="validerFiche" >Valider la fiche de frais </button  >
+    <button type="submit" name="validerFiche" value="validerFiche">Valider </button>
+
+
+   
     </form>
       
-  <?php if(isset($valider)){?>
-    <script type="text/javascript"> alert("La fiche a été validée ! "); </script><?php 
-  }?>
-  
-   
-
-
-
-
-
-  

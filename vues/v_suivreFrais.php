@@ -26,7 +26,7 @@
                 <td><?php echo $visiteur['dateModif']?></td>
                 <td><?php echo $visiteur['montantValide']?></td>
                 <td><?php echo $visiteur['etat']?></td> 
-                <td><a href="index.php?uc=suivreFicheFrais&action=voirDetailFiche&visiteur=<?php echo $visiteur['id'] ?>&mois=<?php echo $visiteur['mois'] ?>"">Consulter</a></td>
+                <td><a href="index.php?uc=suivreFicheFrais&action=voirDetailFiche&visiteur=<?php echo $visiteur['id'] ?>&mois=<?php echo $visiteur['mois'] ?>">Consulter</a></td>
                 
                 </tr>
                 
